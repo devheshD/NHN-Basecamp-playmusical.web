@@ -1,0 +1,76 @@
+<header class="navbar fixed-top" xmlns:th="http://www.thymeleaf.org">
+    <style>
+      body {
+        height: 100%;
+        padding-bottom: 100px;
+      }
+
+      .main-section {
+        min-height: 100%;
+      }
+
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+
+      footer {
+        margin-top: -70px;
+      }
+
+    </style>
+    <div class="container">
+        <nav>
+            <ul>
+                <li class="libold"><a href="/">홈</a></li>
+                <li class="libold"><a th:href="@{/user/login}" th:if="${sessionId eq null}">로그인</a>
+                    <th th:unless="${sessionId eq null}">
+                        <a th:href="@{/user/logout}">로그아웃</a>
+                    </th>
+                </li>
+                <li class="libold"><a th:href="@{/user/register}"
+                                      th:if="${sessionId eq null}">회원가입</a>
+                    <th th:unless="${sessionId eq null}">
+                        <a th:href="@{/user/mypage}">마이페이지</a>
+                    </th>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="domain bg-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="/">
+                        <img alt="Responsive image" class="img-responsive"
+                             src="/img/playmusical_logo.png">
+                    </a>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-7 search-margin">
+                    <form action="/search" method="get">
+                        <div class="input input--nao">
+                            <input class="input__field input__field--nao" id="input-1" name="title"
+                                   type="text">
+                            <label class="input__label input__label--nao" for="input-1">
+                                <span class="input__label-content input__label-content--nao">빈 공백 검색시 전체 목록 확인 가능합니다.</span>
+                            </label>
+                            <svg class="graphic graphic--nao" height="100%"
+                                 preserveAspectRatio="none"
+                                 viewBox="0 0 1200 60"
+                                 width="300%">
+                                <path
+                                    d="M0,56.5c0,0,298.666,0,399.333,0C448.336,56.5,513.994,46,597,46c77.327,0,135,10.5,200.999,10.5c95.996,0,402.001,0,402.001,0"
+                                    stroke-width="1"></path>
+                            </svg>
+                        </div>
+                        <div class="search-name">
+                            <button class="sub-serch bg-orange b-radius" type="submit"><span
+                                class="fa fa-search"></span></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

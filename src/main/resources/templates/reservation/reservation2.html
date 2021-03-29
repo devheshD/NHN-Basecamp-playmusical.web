@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta charset="utf-8">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
+          name="viewport">
+    <meta content="telephone=no" name="format-detection"/>
+    <link href="/favicon.ico" rel="shortcut icon"/>
+    <title>예약 - 예매 결과</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        width: 1000px;
+        height: 700px;
+        margin: 20px auto;
+      }
+
+      .libold {
+        font-weight: bold;
+      }
+
+      header {
+        background-color: #FFA946;
+        height: 50px;
+        border: 1px solid black;
+        display: flex;
+        align-items: center;
+      }
+
+      header ul {
+        flex: 1;
+        display: flex;
+        list-style: none;
+        justify-content: space-evenly;
+      }
+
+      main {
+        display: flex;
+        height: 600px;
+        border: 1px solid black;
+
+      }
+
+      section {
+        height: inherit;
+        width: 650px;
+        padding: 50px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      aside {
+        width: 300px;
+        height: inherit;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+      }
+
+      footer {
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+      }
+
+      button {
+        height: 20px;
+        width: 20px;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+      }
+
+      #cancelBtn, #nextBtn {
+        display: flex;
+        width: 80%;
+        margin: 20px 20px;
+        padding: 20px 0;
+        align-items: center;
+        justify-content: center;
+        color: white;
+      }
+
+      #cancelBtn {
+        background-color: red;
+      }
+
+      #nextBtn {
+        background-color: blue;
+      }
+
+      img {
+        max-width: 300px;
+        max-height: 400px;
+        box-shadow: 5px 5px 5px #000;
+      }
+
+      h3 {
+        color: red;
+      }
+
+      ul, li {
+        list-style: none;
+      }
+
+      h4, section li {
+        margin: 0 10px;
+      }
+
+      .reservation-summary-header {
+        margin-bottom: 20px;
+      }
+
+      .reservation-summary-main, .reservation-summary-choice, .reservation-summary-total {
+        width: 70%;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      li, h4, h5 {
+        padding-bottom: 10px;
+      }
+
+      .reservation-summary-main-title li {
+        width: 100px;
+      }
+
+      .reservation-summary-main-content li {
+        width: 450px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+
+      .reservation-summary-choice {
+        flex-direction: column;
+      }
+
+      span {
+        color: #ff0000;
+      }
+    </style>
+</head>
+<body>
+<header>
+    <ul>
+        <li>
+            좌석등급선택
+        </li>
+        <li> |</li>
+        <li class="libold">
+            결과확인
+        </li>
+    </ul>
+</header>
+<main>
+    <section class="reservation-summary">
+        <div class="reservation-summary-header">
+            <h1>예매가 완료되었습니다.</h1>
+        </div>
+        <h4>예매 상세 정보</h4>
+        <div class="reservation-summary-main">
+            <ul class="reservation-summary-main-title">
+                <li>공연명:</li>
+                <li>장소 :</li>
+                <li>공연날짜 :</li>
+                <li>공연시간 :</li>
+            </ul>
+            <ul class="reservation-summary-main-content">
+                <li>[[${MusicalDto.musicalTitle}]]</li>
+                <li>[[${MusicalDto.location}]]</li>
+                <li th:text="${#temporals.format(performanceDate, 'yyyy년 MM월 dd일')}"></li>
+                <li th:text="${#temporals.format(startTime, 'HH시 mm분')} + ' ~ ' + ${#temporals.format(endTime, 'HH시 mm분')}"></li>
+            </ul>
+        </div>
+        <h4>선택 좌석</h4>
+        <li class="reservation-summary-choice">
+        </li>
+        <li class="reservation-summary-total">
+        </li>
+        <h4> 주 의 사 항</h4>
+        <li>
+            <h5>해당 공연은 <span
+                th:text="${#temporals.format(cancelDate, 'yyyy년 MM월 dd일')} + ' '+${#temporals.format(startTime, 'HH시 mm분')}"></span>까지
+                취소 가능합니다.</h5>
+        </li>
+    </section>
+    <aside>
+        <img alt="" th:src="@{|/display?fileName=${MusicalDto.posterImg}|}">
+    </aside>
+</main>
+<footer>
+    <button id="cancelBtn">창닫기</button>
+    <button id="nextBtn">두레이로 내용 전송</button>
+</footer>
+</body>
+<script th:inline="javascript">
+    'use strict';
+    (function () {
+        let performanceNo = [[${MusicalCalenderDto.performanceNo}]];
+        let xhr = new XMLHttpRequest();
+        let userId = [[${userId}]];
+        let data = {
+            userId
+        };
+        let seatList = [];
+        xhr.open('POST', `/seat/reservation2/${performanceNo}`);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(JSON.stringify(data));
+        let appendSeat = document.querySelector(".reservation-summary-choice");
+        let cancelBtn = document.querySelector('#cancelBtn');
+        let nextBtn = document.querySelector('#nextBtn');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                let select = JSON.parse(xhr.response);
+                if (select.length <= 0) {
+                    alert("선택한 좌석 정보가 없습니다.")
+                    location.href = `/reservation/choice/${performanceNo}`;
+                } else {
+                    select.forEach((val) => {
+                        let tmp = document.createElement('div');
+                        seatList.push({userId, performanceNo, "seatNo": val.seatNo});
+                        tmp.innerHTML = "" + val.seatRank + "\t" + val.seatNo + "\t"
+                            + val.seatPrice;
+                        appendSeat.append(tmp);
+                    });
+                    let xhr = new XMLHttpRequest();
+                    data = seatList;
+                    xhr.open('DELETE', `/seat/reservation2/`);
+                    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                    xhr.send(JSON.stringify(data));
+                    cancelBtn.addEventListener('click', () => {
+                        window.close();
+                    }, {once: true})
+
+                    nextBtn.addEventListener('click', () => {
+                        let xhr = new XMLHttpRequest();
+                        xhr.open('GET', `/user/isLogin/`);
+                        xhr.send();
+                        xhr.onload = function () {
+                            if (xhr.status === 200) {
+                                let id = [[${userId}]];
+                                let data = {
+                                    id
+                                };
+                                let doorayUrl = new XMLHttpRequest();
+                                doorayUrl.open('POST', `/user/dooray/`);
+                                doorayUrl.setRequestHeader("Content-Type",
+                                    "application/json;charset=UTF-8");
+                                doorayUrl.send(JSON.stringify(data));
+                                doorayUrl.onload = function () {
+                                    let data2 = {
+                                        "botName": "플레이뮤지컬 예매 알림 서비스",
+                                        "botIconImage": `/img/icon/loginIcon.png`,
+                                        "text": "저희 서비스를 이용해주셔서 감사합니다.",
+                                        "attachments": [
+                                            {
+                                                "title": "클릭시 예매 페이지로 이동합니다.",
+                                                "titleLink": `http://playmusical.nhn.com/user/mypage/`,
+                                                "text": "마이페이지로 가셔서 예약 내용을 확인해보세요",
+                                                "color": "red"
+                                            }
+                                        ]
+                                    }
+                                    let xhr = new XMLHttpRequest();
+                                    xhr.open('POST', doorayUrl.response);
+                                    xhr.setRequestHeader("Content-Type",
+                                        "application/json;charset=UTF-8");
+                                    xhr.send(JSON.stringify(data2));
+                                    xhr.onload = function () {
+                                    }
+                                }
+                            } else {
+                                alert("세션이 만료되었습니다.");
+                                window.close();
+                            }
+                        }
+                    }, {once: true})
+                }
+            }
+        }
+    }());
+</script>
+</html>

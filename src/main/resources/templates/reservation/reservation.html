@@ -1,0 +1,489 @@
+<!-- 예약 첫 화면 - 좌석 선택-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
+          name="viewport">
+    <meta content="telephone=no" name="format-detection"/>
+    <link href="/favicon.ico" rel="shortcut icon"/>
+    <title>예약 - 좌석선택</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        width: 1000px;
+        height: 700px;
+        margin: 20px auto;
+      }
+
+      .libold {
+        font-weight: bold;
+      }
+
+      header {
+        background-color: #FFA946;
+        height: 10%;
+        border: 1px solid black;
+        display: flex;
+        align-items: center;
+      }
+
+      header ul {
+        flex: 1;
+        display: flex;
+        list-style: none;
+        justify-content: space-evenly;
+      }
+
+      main {
+        height: 90%;
+        display: flex;
+      }
+
+      section {
+        flex: 1;
+        border: 1px solid black;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+      }
+
+      aside {
+        flex: 1;
+        border: 1px solid black;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .seat {
+        border: 1px solid black;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+        padding: 20px 0;
+      }
+
+      .seat-choice {
+        display: flex;
+        width: 80%;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0;
+      }
+
+      .seat-choice-header {
+        text-align: center;
+      }
+
+      .button-list {
+        display: flex;
+        width: 80%;
+        justify-content: center;
+      }
+
+      .seat-info-rank li:before, .seat-choice-rank li:before {
+        content: "◼︎";
+      }
+
+      .seat-choice-rank li:first-child:before {
+        color: red;
+      }
+
+      .seat-choice-rank li:nth-child(2):before {
+        color: blue;
+      }
+
+      .seat-choice-rank li:nth-child(3):before {
+        color: green;
+      }
+
+      .seat-choice-rank li:nth-child(4):before {
+        color: purple;
+      }
+
+      .seat-choice-main {
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        flex-direction: column;
+      }
+
+      .seat-choice-main ul {
+        list-style: none;
+      }
+
+      .stage {
+        width: 60%;
+        border: 1px solid black;
+        background-color: gray;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px 0;
+      }
+
+      button {
+        height: 20px;
+        width: 20px;
+        margin: 0;
+        padding: 0;
+        opacity: 0.2;
+        outline: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      .impossible {
+        opacity: 1;
+        background-color: gray !important;
+        cursor: not-allowed !important;
+      }
+
+      .selected {
+        opacity: 1;
+      }
+
+      .line:nth-child(1) button {
+        background-color: red;
+      }
+
+      .line:nth-child(n+2):nth-child(-n+3) button {
+        background-color: blue;
+      }
+
+      .line:nth-child(n+4):nth-child(-n+6) button {
+        background-color: green;
+      }
+
+      .line:nth-child(n+7):nth-child(-n+10) button {
+        background-color: purple;
+      }
+
+      #cancelBtn, #nextBtn {
+        opacity: 1;
+        display: flex;
+        width: 80%;
+        margin: 20px 20px;
+        padding: 20px 0;
+        align-items: center;
+        justify-content: center;
+        color: white;
+      }
+
+      #cancelBtn {
+        background-color: red;
+      }
+
+      #nextBtn {
+        background-color: blue;
+      }
+    </style>
+</head>
+<body>
+<header>
+    <ul>
+        <li class="libold">
+            좌석등급선택
+        </li>
+        <li> |</li>
+
+        <li>
+            결과확인
+        </li>
+    </ul>
+</header>
+<main>
+    <section>
+        <div class="stage">
+            <h1>STAGE</h1>
+        </div>
+        <div class="seat-container">
+            <div class="line">
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+            </div>
+            <div class="line">
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+            </div>
+            <div class="line">
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+            </div>
+            <div class="line">
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+            </div>
+            <div class="line">
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+            </div>
+            <div class="line">
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+            </div>
+            <div class="line">
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+            </div>
+            <div class="line">
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+            </div>
+            <div class="line">
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+            </div>
+            <div class="line">
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+                <button></button>
+            </div>
+        </div>
+    </section>
+    <aside>
+        <div class="seat">
+            <div class="seat-choice">
+                <div class="seat-choice-header">
+                    <h1>선택 좌석</h1>
+                    <span id="seat-choice-total">
+                    </span>
+                </div>
+                <div class="seat-choice-main">
+                </div>
+            </div>
+            <div class="button-list">
+                <button id="cancelBtn">취소</button>
+                <button id="nextBtn">다음</button>
+            </div>
+        </div>
+    </aside>
+</main>
+</body>
+<script src="/js/ip.js"></script>
+<script th:inline="javascript">
+    'use strict';
+    (function () {
+        let totalSelectSeat = 0;
+        let totalDiv = document.querySelector('#seat-choice-total');
+        let listSeat = [];
+        let seatNoList = [];
+        let xhr = new XMLHttpRequest();
+        let performanceNo = [[${performanceNo}]];
+        let userId = [[${userId}]];
+        xhr.open('POST', `/seat/${performanceNo}`);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send();
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                let seats = JSON.parse(xhr.response);
+                seats.forEach((val, index) => {
+                    button.item((val.seatNo) - 1).classList.add("impossible");
+                    button.item((val.seatNo) - 1).diabled = true;
+                })
+            }
+        }
+        let button = document.querySelectorAll(".line button");
+        let appendSeat = document.querySelector(".seat-choice-main");
+        button.forEach((target, idx) => {
+            target.addEventListener("click",
+                function (event) {
+                    if (event.target.classList.contains('impossible')) {
+                        return;
+                    }
+
+                    event.target.classList.toggle('selected');
+                    let xhr = new XMLHttpRequest();
+                    let seatNo = idx + 1;
+                    if (event.target.classList.contains('selected')) {
+                        if (totalSelectSeat + 1 > 4) {
+                            event.target.classList.toggle('selected');
+                            alert("한번에 최대 4개의 좌석을 예약할 수 있습니다.")
+                            return;
+                        }
+                        xhr.open('GET', `/seat/occupy/${userId}/${performanceNo}/${seatNo}`, true);
+                        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                        xhr.send();
+                        xhr.onload = function () {
+                            if (xhr.status === 400) {
+                                event.target.classList.toggle('selected');
+                                alert("이미 선점중인 자립니다.")
+                            } else {
+                                let tmp = document.createElement('div');
+                                tmp.id = seatNo + "";
+                                xhr.open('GET', `/seat/${seatNo}`);
+                                xhr.setRequestHeader("Content-Type",
+                                    "application/json;charset=UTF-8");
+                                xhr.send();
+                                xhr.onload = function () {
+                                    if (xhr.status === 200) {
+                                        let select = JSON.parse(xhr.response);
+                                        tmp.innerHTML = "" + select.seatRank + "\t" + select.seatNo
+                                            + "\t" + select.seatPrice;
+                                        appendSeat.append(tmp);
+                                        listSeat.push(seatNo);
+                                        seatNoList.push(seatNo);
+                                        totalSelectSeat++;
+                                        totalDiv.innerHTML = `선택한 좌석은 총 ${totalSelectSeat} 석 입니다.`;
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        totalSelectSeat--;
+                        totalDiv.innerHTML = `선택한 좌석은 총 ${totalSelectSeat} 석 입니다.`;
+                        xhr.open('DELETE', `/seat/occupy/${userId}/${performanceNo}/${seatNo}`,
+                            true);
+                        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                        xhr.send();
+                        xhr.onload = function () {
+                            let tmp = document.getElementById(seatNo);
+                            tmp.remove();
+                            let idx = listSeat.indexOf(seatNo);
+                            if (idx > -1) {
+                                listSeat.splice(idx, 1);
+                                seatNoList.splice(idx, 1);
+                            }
+                        }
+                    }
+                }, false
+            );
+        });
+        // 버튼 효과
+        let nextBtn = document.querySelector('#nextBtn');
+        let cancelBtn = document.querySelector('#cancelBtn');
+        cancelBtn.addEventListener('click', () => {
+            let size = seatNoList.length;
+            seatNoList.forEach((val) => {
+                let seatNo = val;
+                xhr.open('DELETE', `/seat/occupy/${userId}/${performanceNo}/${seatNo}`,
+                    true);
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xhr.send();
+                xhr.onload = function () {
+                    size--;
+                }
+                if (size === 0) {
+                    window.close();
+                }
+            });
+            window.close();
+        });
+        nextBtn.addEventListener('click', () => {
+            let xhr = new XMLHttpRequest();
+            let answer = confirm("예매하시겠습니까?");
+            if (answer === true) {
+                let data = [];
+                listSeat.forEach(value => {
+                    data.push({userId, performanceNo, "seatNo": value})
+                })
+                if (data.length <= 0) {
+                    alert("선택한 좌석이 없습니다.");
+                } else {
+                    // xhr.open('POST', `/seat/reservation`);
+                    xhr.open('POST', `/seat/finish`);
+                    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                    xhr.send(JSON.stringify(data));
+                    xhr.onload = function () {
+                        if (xhr.status === 400) {
+                            alert("해당 화면에 선점취소된 자리가 있어 새로고침합니다.")
+                            location.reload();
+                        } else {
+                            location.href = `/reservation/check/${performanceNo}`;
+                        }
+                    }
+                }
+            }
+        })
+    })();
+</script>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
+          name="viewport">
+    <meta content="telephone=no" name="format-detection"/>
+    <link href="/favicon.ico" rel="shortcut icon"/>
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+          rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/tui-date-picker.css" rel="stylesheet">
+    <title>Play Musical</title>
+    <style>
+        header {
+            background-color: #FFA946;
+        }
+
+        .copyright {
+            background-color: #FFA946;
+        }
+
+        .libold {
+            font-weight: bold;
+        }
+
+        .domain {
+            padding-bottom: 0px;
+            padding-top: 0px;
+        }
+
+        .header-top {
+            padding-top: 100px;
+            padding-bottom: 100px;
+        }
+
+        .search-margin {
+            padding-top: 10px;
+        }
+
+        .detail-poster {
+            width: 360px;
+            height: 400px;
+        }
+
+        .table-line {
+            border-bottom: 1px solid #ffffff;
+        }
+
+        p.font-13 {
+            color: black;
+            font-size: 15px;
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+
+        .serv-block {
+            padding: 10px 60px 0;
+        }
+
+        .title-text {
+            padding-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        .block-desc {
+            padding-left: 50px;
+        }
+
+        #reserveBtn {
+            padding: 10px 50px;
+        }
+
+        td {
+            vertical-align: middle;
+        }
+
+
+    </style>
+</head>
+<body>
+<div th:replace="~{/cmmn/header.html}"></div>
+<div class="main-section bg-white">
+    <div class="container header-top">
+        <div class="row">
+            <div class="col-md-4">
+                <h2 class="title-text"><b>[[${musicalDTO.musicalTitle }]]</b></h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="image">
+                    <img alt="" class="detail-poster"
+                         th:src="@{|/display?fileName=${musicalDTO.posterImg}|}"/>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="block-desc">
+                    <div class="table-responsive">
+                        <table class="table text-center">
+                            <tbody>
+                            <tr>
+                                <td class="table-line" style="border-top: #ffffff"><b>장소</b></td>
+                                <td class="table-line" colspan="2" style="border-top: #ffffff">
+                                    [[${musicalDTO.location }]]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="table-line"><b>공연기간</b></td>
+                                <td class="table-line" colspan="2">[[${musicalDTO.startDate
+                                    }]]~[[${musicalDTO.endDate
+                                    }]]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="table-line"><b>공연시간</b></td>
+                                <td class="table-line" colspan="2">[[${musicalDTO.startTime
+                                    }]]~[[${musicalDTO.endTime
+                                    }]]
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="table-line"><b>가격</b></td>
+                                <td class="table-line">VIP</td>
+                                <td class="table-line">150,000 원</td>
+                            </tr>
+                            <tr>
+                                <td class="table-line"></td>
+                                <td class="table-line">R</td>
+                                <td class="table-line">130,000 원</td>
+                            </tr>
+                            <tr>
+                                <td class="table-line"></td>
+                                <td class="table-line">S</td>
+                                <td class="table-line">100,000 원</td>
+                            </tr>
+                            <tr>
+                                <td class="table-line"></td>
+                                <td class="table-line">A</td>
+                                <td class="table-line">80,000 원</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="block-desc">
+                    <div id="wrapper" style="margin-top: -1px;"></div>
+                    <input aria-label="Date-Time" id="datepicker-input" type="hidden">
+                    <span class="tui-ico-date"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="serv-block border-yellow">
+                    <h4 id="timeText" style="display: inline"></h4>
+                    <h4 id="time" style="display: inline"></h4>
+                    <p class="font-13">
+                        <span id="vipSeatCnt"></span>
+                        <span id="rSeatCnt"></span>
+                        <span id="sSeatCnt"></span>
+                        <span id="aSeatCnt"></span>
+                        <button class="button-2 bg-orange" id="reserveBtn">예매하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{/cmmn/footer.html}"></div>
+<script src="/js/tui-date-picker.js" type="text/javascript"></script>
+<script class="code-js" th:inline="javascript" type="text/javascript">
+    var datepicker = new tui.DatePicker('#wrapper', {
+        date: new Date(),
+        language: 'ko',
+        input: {
+            element: '#datepicker-input',
+            format: 'yyyy-MM-dd'
+        },
+        showAlways: true
+    });
+    let startDate = [[${transDate}]];
+    let curDate = [[${curDate}]];
+    let startYear;
+    let startMonth;
+    let startDay;
+    let endDate = [[${transEndDate}]];
+    let endYear;
+    let endMonth;
+    let endDay;
+
+    if (curDate <= startDate) {
+        startYear = [[${startYear}]];
+        startMonth = [[${startMonth}]];
+        startDay = [[${startDay}]];
+
+    } else {
+        startYear = [[${curYear}]];
+        startMonth = [[${curMonth}]];
+        startDay = [[${curDay}]];
+    }
+
+    if (curDate <= endDate) {
+        endYear = [[${endYear}]];
+        endMonth = [[${endMonth}]];
+        endDay = [[${endDay}]];
+
+    } else {
+        endYear = [[${curYear}]];
+        endMonth = [[${curMonth}]];
+        endDay = [[${curDay}]];
+    }
+    datepicker.setRanges([
+        [new Date(startYear, startMonth - 1, startDay), new Date(endYear, endMonth - 1, endDay)]
+    ])
+    getSeatInformation();
+
+    datepicker.on('change', function () {
+        getSeatInformation();
+    });
+
+    function getSeatInformation(){
+        let date = datepicker.getDate().toString().split(" ");
+        let year = date[3];
+        let month = date[1];
+        let day = date[2];
+        let musicalNo = [[${musicalDTO.musicalNo}]];
+
+        if (month === "Jan") {
+            month = 1;
+        } else if (month === "Feb") {
+            month = 2;
+        } else if (month === "Mar") {
+            month = 3;
+        } else if (month === "Apr") {
+            month = 4;
+        } else if (month === "May") {
+            month = 5;
+        } else if (month === "Jun") {
+            month = 6;
+        } else if (month === "Jul") {
+            month = 7;
+        } else if (month === "Aug") {
+            month = 8;
+        } else if (month === "Sep") {
+            month = 9;
+        } else if (month === "Oct") {
+            month = 10;
+        } else if (month === "Nov") {
+            month = 11;
+        } else if (month === "Dec") {
+            month = 12;
+        }
+
+        $.ajax({
+            type: 'get',
+            url: '/musicalNo',
+            data: {
+                'year': year,
+                'month': month,
+                'day': day,
+                'musicalNo': musicalNo
+            },
+            success: function (res) {
+                let xhr = new XMLHttpRequest();
+                let performanceNo = res;
+                xhr.open('POST', `/seat/${performanceNo}`);
+                xhr.send();
+                xhr.onload = function () {
+                    let seatCnt = [0, 0, 0, 0];
+                    if (xhr.status === 200) {
+                        console.log("예약된 좌석 정보 로드 성공");
+                        console.log(xhr.response)
+                        let seats = JSON.parse(xhr.response);
+                        seats.forEach((val) => {
+                            if (val.seatNo <= 10) {
+                                seatCnt[0]++;
+                            } else if (val.seatNo <= 30) {
+                                seatCnt[1]++;
+                            } else if (val.seatNo <= 60) {
+                                seatCnt[2]++;
+                            } else {
+                                seatCnt[3]++;
+                            }
+                        })
+                        seatCnt[0] = 10 - seatCnt[0];
+                        seatCnt[1] = 20 - seatCnt[1];
+                        seatCnt[2] = 30 - seatCnt[2];
+                        seatCnt[3] = 40 - seatCnt[3];
+
+                        $("#vipSeatCnt").html('VIP석 ' + seatCnt[0] + ' / ');
+                        $("#rSeatCnt").html('R석 ' + seatCnt[1] + ' / ');
+                        $("#sSeatCnt").html('S석 ' + seatCnt[2] + ' / ');
+                        $("#aSeatCnt").html('A석 ' + seatCnt[3]);
+
+                        let reserveBtn = $("#reserveBtn");
+                        reserveBtn.off();
+                        reserveBtn.on("click", function () {
+                            window.open("/reservation/choice/" + res);
+                        });
+                    } else {
+                        console.log("서버 오류로 좌석 정보 읽어오는데 실패했습니다.");
+                    }
+                }
+            }       // End of Success
+        })
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
+          name="viewport">
+    <meta content="telephone=no" name="format-detection">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+          rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <title>Play Musical</title>
+    <style>
+      header {
+        background-color: #FFA946;
+      }
+
+      .copyright {
+        background-color: #FFA946;
+      }
+
+      .libold {
+        font-weight: bold;
+      }
+
+      .domain {
+        padding-bottom: 0px;
+        padding-top: 0px;
+      }
+
+      input[type="button"] {
+        z-index: 1;
+        font-size: 14px;
+        text-transform: uppercase;
+        color: #fff;
+        background: #ff9700;
+        text-align: center;
+        border-radius: 5px;
+        position: relative;
+        padding: 15px 20px;
+        overflow: hidden;
+        transition: all .2s ease-out;
+        -webkit-transition: all .2s ease-out;
+        -moz-transition: all .2s ease-out;
+        -ms-transition: all .2s ease-out;
+      }
+
+      input[type="button"]:before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-left: -10px;
+        margin-top: -10px;
+        width: 20px;
+        height: 20px;
+        background: #fff;
+        border-radius: 50%;
+        opacity: 0;
+      }
+
+      input[type="button"]:hover {
+        background: #fff;
+        color: #313131;
+      }
+
+      input[type="button"]:hover:before {
+        opacity: 0.5;
+        z-index: -1;
+        transform: scale(6);
+        -webkit-transform: scale(6);
+        -moz-transform: scale(6);
+        -ms-transform: scale(6);
+      }
+
+      .register-form-check {
+        font-size: 14px;
+      }
+    </style>
+</head>
+<body>
+<div th:replace="~{/cmmn/header.html}"></div>
+<div class="main-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8 h2">
+                <img alt="" height="33px" src="/img/icon/boxbarIcon.png" width="20px">
+                <span class="bold">회원가입</span>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg4 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-12">
+                    <form
+                        class="contact-form login-form bg-grey b-radius b-shadow">
+                        <div class="form-img">
+                            <img alt="" src="/img/icon/registerIcon.png">
+                        </div>
+                        <div class="half-input">
+                            <div class="input-label">
+                                <label for="id">아이디 *</label>
+                                <input id="id" name="id" onkeyup="check_id()" required type="text"
+                                       value="">
+                            </div>
+                            <input class="b-shadow idcheck" disabled id="duplcheck"
+                                   required type="button"
+                                   value="중복확인"/>
+                        </div>
+                        <span class="register-form-check" id="user_id_check">&nbsp;</span>
+                        <span class="register-form-check" id="id-check">&nbsp;</span>
+                        <div class="input-label">
+                            <label for="user_name">이름 *</label>
+                            <input id="user_name" name="name" required type="text" value="">
+                        </div>
+                        <div class="input-label">
+                            <label for="user_password">비밀번호 *</label>
+                            <input id="user_password" name="password" onkeyup="check_pw()"
+                                   required type="password">
+                            <span class="register-form-check" id="pw-check">&nbsp;</span>
+                        </div>
+                        <div class="input-label">
+                            <label for="password_check">비밀번호 확인 *</label>
+                            <input id="password_check" name="password_check" onkeyup="check_pw()"
+                                   required
+                                   type="password">
+                            <span class="register-form-check" id="pw2-check">&nbsp;</span>
+                        </div>
+                        <div class="input-label">
+                            <label for="doorayurl">Dooray URL *</label>
+                            <input id="doorayurl" name="url" onkeyup="checkUrl()" required
+                                   type="url" value="">
+                            <span class="register-form-check" id="doorayurl-check">&nbsp;</span>
+                        </div>
+                        <input class="b-shadow submit" disabled id="register" type="button"
+                               value="회원가입">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div th:replace="~{/cmmn/footer.html}"></div>
+</body>
+<script>
+    document.getElementById('duplcheck').onclick = function () {
+        var user_id = $('#id').val();
+        var data = {id: user_id}
+        $.ajax({
+            type: "post",
+            url: `/user/userIdChk/`,
+            data: data,
+            success: function () {
+                document.getElementById('user_id_check').innerHTML = '사용가능한 아이디입니다.';
+                document.getElementById('user_id_check').style.color = 'green';
+                document.getElementById('register').disabled = 'disabled';
+                checkIdState = true;
+            },
+            error: function () {
+                document.getElementById('user_id_check').innerHTML = '중복된 아이디입니다.';
+                document.getElementById('user_id_check').style.color = 'red';
+                document.getElementById('register').disabled = 'disabled';
+                checkIdState = false;
+            }
+        });
+    };
+    document.getElementById('register').onclick = function () {
+        var userId = $('#id').val();
+        var password = $("#user_password").val();
+        var userName = $("#user_name").val();
+        var url = $("#doorayurl").val();
+        var data = {id: userId, password: password, name: userName, url: url};
+        $.ajax({
+            type: "post",
+            url: `/user/register/`,
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function (result) {
+                alert('회원가입 성공');
+                location.href = "/user/login";
+            }
+        });
+    };
+    var checkIdState = false;
+    var passState = false;
+    var doorayState = false;
+
+    function check_id() {
+        var id = document.getElementById('id').value;
+        var num = id.search(/[0-9]/g);
+        var eng = id.search(/[a-z]/g);
+        var eng2 = id.search(/[A-Z]/g);
+        var spe = id.search(/[*.!@#$%^&(){}[\]:;"'<>,?\\/~_+\-=|]/gi);
+        if (id.length > 10 || id.length < 5 || spe >= 0 || eng2 >= 0) {
+            document.getElementById('user_id_check').innerHTML = '5~10자의 영문 소문자와 숫자만 사용가능합니다.';
+            document.getElementById('user_id_check').style.color = 'red';
+            document.getElementById('duplcheck').disabled = 'disabled';
+            document.getElementById('register').disabled = 'disabled';
+            checkIdState = false;
+            return false;
+        } else if (id.search(/\s/) != -1) {
+            document.getElementById('user_id_check').innerHTML = '아이디는 공백 없이 입력해주세요.';
+            document.getElementById('duplcheck').disabled = 'disabled';
+            document.getElementById('register').disabled = 'disabled';
+            checkIdState = false;
+            return false;
+        } else {
+            document.getElementById('user_id_check').innerHTML = '';
+            document.getElementById('register').disabled = 'disabled';
+            document.getElementById('duplcheck').disabled = false;
+            checkIdState = false;
+        }
+        if (checkIdState && passState) {
+            checkUrl();
+            if (doorayState) {
+                document.getElementById('register').disabled = false;
+            }
+        }
+    }
+
+    function check_pw() {
+        var pw = document.getElementById('user_password').value;
+        var num = pw.search(/[0-9]/g);
+        var eng = pw.search(/[a-z]/g);
+        var eng2 = pw.search(/[A-Z]/g);
+        const spe = pw.search(/[*.!@#$%^&(){}[\]:;"'<>,?\\/~_+\-=|]/gi);
+        if (pw.length > 10 || pw.length < 5 || spe >= 0) {
+            document.getElementById('pw-check').innerHTML = '5~10자의 영문 대소문자와 숫자만 사용가능합니다.';
+            document.getElementById('pw-check').style.color = 'red';
+            document.getElementById('register').disabled = 'disabled';
+            passState = false;
+            return false;
+        } else if (/(\w)\1\1\1/.test(pw)) {
+            document.getElementById('pw-check').innerHTML = '같은 문자를 4번 이상 사용하실 수 없습니다.';
+            document.getElementById('pw-check').style.color = 'red';
+            document.getElementById('pw2-check').innerHTML = '';
+            document.getElementById('register').disabled = 'disabled';
+            passState = false;
+            return false;
+        } else if (pw.search(/\s/) !== -1) {
+            document.getElementById('pw-check').innerHTML = '비밀번호 공백 없이 입력해주세요.';
+            document.getElementById('register').disabled = 'disabled';
+            passState = false;
+            return false;
+        } else {
+            document.getElementById('pw-check').innerHTML = '사용가능한 비밀번호입니다.';
+            document.getElementById('pw-check').style.color = 'green';
+            document.getElementById('register').disabled = 'disabled';
+        }
+        if (document.getElementById('user_password').value !== '' && document.getElementById(
+            'password_check').value !== '') {
+            if (document.getElementById('user_password').value === document.getElementById(
+                'password_check').value) {
+                document.getElementById('pw2-check').innerHTML = '비밀번호가 일치합니다.';
+                document.getElementById('pw-check').innerHTML = '';
+                document.getElementById('pw2-check').style.color = 'green';
+                passState = true;
+            } else {
+                document.getElementById('pw2-check').innerHTML = '비밀번호가 일치하지 않습니다.';
+                document.getElementById('pw-check').innerHTML = '';
+                document.getElementById('pw2-check').style.color = 'red';
+                document.getElementById('register').disabled = 'disabled';
+                passState = false;
+            }
+        }
+        if (checkIdState && passState) {
+            chec
+            if (doorayState) {
+                document.getElementById('register').disabled = false;
+            }
+        }
+    }
+
+    function checkUrl() {
+        var doorayUrl = document.getElementById('doorayurl').value;
+        if (doorayUrl === '' || !doorayUrl.startsWith("https://hook.dooray.com/services/")) {
+            doorayState = false;
+            document.getElementById('doorayurl-check').innerHTML = 'Dooray URL 형식과 일치하지 않습니다.';
+            document.getElementById('doorayurl-check').style.color = 'red';
+
+        } else {
+            doorayState = true;
+            document.getElementById('doorayurl-check').innerHTML = '';
+        }
+        if (checkIdState && passState && doorayState) {
+            document.getElementById('register').disabled = false;
+        }
+    }
+</script>
+</html>

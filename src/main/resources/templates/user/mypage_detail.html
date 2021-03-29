@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
+          name="viewport">
+    <meta content="telephone=no" name="format-detection">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+          rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <title>Play Musical</title>
+    <style>
+      header {
+        background-color: #FFA946;
+      }
+
+      .copyright {
+        background-color: #FFA946;
+      }
+
+      .libold {
+        font-weight: bold;
+      }
+
+      .domain {
+        padding-bottom: 0px;
+        padding-top: 0px;
+      }
+
+      .header-top {
+        padding-top: 100px;
+      }
+
+      .search-margin {
+        padding-top: 10px;
+      }
+
+      th:nth-child(2n), td:nth-child(2n) {
+        background-color: #FFFFFF;
+        text-align: left;
+
+      }
+
+      th:nth-child(2n+1), td:nth-child(2n+1) {
+        background-color: #EDEDED;
+        color: #000000;
+      }
+
+      .delete-button-custom {
+        background: #D35400;
+        color: #FFFFFF;
+        width: 60px;
+        height: 30px;
+        border-radius: 3px;
+      }
+
+      .poster-img {
+        max-height: 200px;
+        max-width: 170px;
+      }
+    </style>
+</head>
+<body>
+<div th:replace="~{/cmmn/header.html}"></div>
+<div class="main-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <img alt="" height="33px" src="/img/icon/boxbarIcon.png" width="20px">
+                <span class="bold h2" style="text-align: left">마이페이지</span>
+                <div class="row">
+                    <div class="col-lg-3"><span>&nbsp&nbsp&nbsp</span></div>
+                </div>
+                <div class="list-group">
+                    <a class="list-group-item" href="/user/mypage" style="color: #FFA946">예매내역
+                        확인·취소</a>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <span class="bold h3">예매내역 확인·취소</span>
+                <div class="row">
+                    <div class="col-lg-3"><span>&nbsp&nbsp&nbsp</span></div>
+                </div>
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="tables b-shadow table" style="border : 3px solid #FFA946">
+                            <tbody>
+                            <tr>
+                                <td rowspan="8" style="background-color: #FFFFFF">
+                                    <img alt=""
+                                         class="poster-img"
+                                         th:src="@{|/display?fileName=${MusicalDto.posterImg}|}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>제목</td>
+                                <td>[[${MusicalDto.musicalTitle}]]</td>
+                            </tr>
+                            <tr>
+                                <td>이용일</td>
+                                <td th:text="${#temporals.format(MusicalCalenderDto.performanceData, 'yyyy년 MM월 dd일')}"></td>
+                            </tr>
+                            <tr>
+                                <td>공연 시간</td>
+                                <td>[[${MusicalDto.startTime}]] ~ [[${MusicalDto.endTime}]]</td>
+                            </tr>
+                            <tr>
+                                <td>장소</td>
+                                <td>[[${MusicalDto.location}]]</td>
+                            </tr>
+                            <tr>
+                                <td>좌석</td>
+                                <td id="seat"></td>
+                            </tr>
+                            <tr>
+                                <td>취소가능일</td>
+                                <td th:text="${#temporals.format(MusicalCalenderDto.cancelDate, 'yyyy년 MM월 dd일 HH:mm')}"></td>
+                            </tr>
+                            <tr>
+                                <td>취소</td>
+                                <td>
+                                    <button class="delete-button-custom" id="cancel"
+                                            onclick="cancel()">취소하기
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{/cmmn/footer.html}"></div>
+</body>
+<script th:inline="javascript">
+    var reservationNo = [[${reservationNo}]];
+    var performanceNo = [[${performanceNo}]];
+    var canceldt = [[${MusicalCalenderDto.cancelDate}]];
+    (function () {
+        let data = {'reservationNo': reservationNo};
+        $.ajax({
+            type: "post",
+            url: `/api/mypage/reservation`,
+            data: {'reservationNo': reservationNo},
+
+            success: function (result) {
+                var size = result.length;
+                if (size != 0) {
+                    for (var i = 0; i < size; i++) {
+                        var seatNum = result[i].seatNo.seatNo;
+                        var seatRank = result[i].seatNo.seatRank;
+                        document.getElementById('seat').innerHTML += seatRank + " " + seatNum
+                            + " <br>";
+                    }
+                } else {
+                    document.getElementById('cancel').style.background = '#34495E';
+                    document.getElementById('cancel').innerHTML = '취소완료';
+                    document.getElementById('cancel').disabled = 'disabled';
+                }
+                formatDate(canceldt);
+            }
+        });
+
+        function formatDate(curDate) {
+            var today, resultDate;
+            today = new Date();
+            resultDate = new Date(curDate);
+            if (today.getTime() > resultDate.getTime()) {
+                document.getElementById('cancel').style.background = '#34495E';
+                document.getElementById('cancel').innerHTML = '취소불가';
+                document.getElementById('cancel').disabled = 'disabled';
+            }
+        }
+    })()
+
+    function cancel() {
+        let cancel = confirm("취소하시겠습니까?");
+        if (cancel === true) {
+            $.ajax({
+                type: "post",
+                url: `/api/mypage/cancel`,
+                data: {'reservationNo': reservationNo, 'performanceNo': performanceNo},
+                success: function () {
+                    alert('취소되었습니다.');
+                    location.href = `/user/mypage`;
+                }
+            });
+        }
+    }
+</script>
+</html>

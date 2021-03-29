@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
+          name="viewport">
+    <meta content="telephone=no" name="format-detection">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+          rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <title>Play Musical</title>
+    <style>
+      header {
+        background-color: #FFA946;
+      }
+
+      .copyright {
+        background-color: #FFA946;
+      }
+
+      .libold {
+        font-weight: bold;
+      }
+
+      .domain {
+        padding-bottom: 0px;
+        padding-top: 0px;
+      }
+
+      .header-top {
+        padding-top: 100px;
+      }
+
+      .search-margin {
+        padding-top: 10px;
+      }
+
+      .register-form-check {
+        font-size: 14px;
+      }
+
+      input[type="button"] {
+        z-index: 1;
+        font-size: 14px;
+        text-transform: uppercase;
+        color: #fff;
+        background: #ff9700;
+        text-align: center;
+        border-radius: 5px;
+        position: relative;
+        padding: 15px 20px;
+        overflow: hidden;
+        transition: all .2s ease-out;
+        -webkit-transition: all .2s ease-out;
+        -moz-transition: all .2s ease-out;
+        -ms-transition: all .2s ease-out;
+      }
+
+      input[type="button"]:before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-left: -10px;
+        margin-top: -10px;
+        width: 20px;
+        height: 20px;
+        background: #fff;
+        border-radius: 50%;
+        opacity: 0;
+      }
+
+      input[type="button"]:hover {
+        background: #fff;
+        color: #313131;
+      }
+
+      input[type="button"]:hover:before {
+        opacity: 0.5;
+        z-index: -1;
+        transform: scale(6);
+        -webkit-transform: scale(6);
+        -moz-transform: scale(6);
+        -ms-transform: scale(6);
+      }
+
+      .drop {
+        display: flex !important;
+      }
+
+      .select-domain {
+        background-color: white;
+        lign-items: center;
+        flex: 1;
+        text-align-last: center;
+        font-weight: bold;
+      }
+
+      #id {
+        width: 300px;
+        float: left;
+      }
+    </style>
+
+</head>
+<body>
+<div th:replace="~{/cmmn/header.html}"></div>
+<div class="main-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8 h2">
+                <img alt="" height="33px" src="/img/icon/boxbarIcon.png" width="20px">
+                <span class="bold">공통 로그인</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-12">
+                <form
+                    class="contact-form login-form bg-grey b-radius b-shadow">
+                    <div class="form-img">
+                        <img alt="" src="/img/icon/loginIcon.png">
+                    </div>
+                    <div class="input-label">
+                        <label for="id" style="display: block">아이디 *</label>
+                        <input id="id" name="id" required="" type="text" value="">
+                        <div class="drop-wrap">
+                            <div class="drop">
+                                <select class="select-domain" id="url">
+                                    <option value="girin">기린</option>
+                                    <option value="hippo">하마</option>
+                                    <option value="rabbit">토끼</option>
+                                    <option value="fox">여우</option>
+                                    <option value="deer">사슴</option>
+                                    <option value="lion">사자</option>
+                                    <option value="duck">오리</option>
+                                    <option value="swan">백조</option>
+                                    <option value="panda">판다</option>
+                                    <option selected value="saecom">새콤</option>
+                                    <option value="dalcom">달콤</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-label">
+                        <label for="password">비밀번호 *</label>
+                        <input id="password" name="password" required="" type="password" value="">
+                        <span class="register-form-check" id="check">&nbsp;</span>
+                    </div>
+                    <a class="form-link" href="register"><span class="fa fa-angle-right"></span>회원가입</a>
+                    <input class="b-shadow submit" id="login" type="button" value="로그인"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{/cmmn/footer.html}"></div>
+</body>
+<script>
+    document.getElementById('login').onclick = function () {
+        const userId = $('#id').val();
+        const password = $('#password').val();
+        const userData = {id: userId, password: password};
+        let urlName = document.querySelector("#url").value;
+        $.ajax({
+            type: 'post',
+            url: `/user/totalLogin/${urlName}`,
+            contentType: 'application/json',
+            data: JSON.stringify(userData),
+            success: function (result) {
+                $('#check').html('');
+                const url = JSON.parse(result).url;
+                location.href = url;
+            },
+            error: function () {
+                $('#check').html('아이디 또는 비밀번호를 잘못 입력하셨습니다.');
+                $('#check').css('color', 'red');
+            }
+        });
+    };
+</script>
+</html>

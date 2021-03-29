@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <title>Play Musical</title>
+</head>
+<body>
+<div th:replace="~{/cmmn/admin.html}"></div>
+<!-- 본문 -->
+<div id="page-content-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8 h2">
+                <img src="/img/icon/boxbarIcon.png" width="20px" height="33px" alt="">
+                <span class="bold">뮤지컬 등록하기</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg4 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-12">
+                <form th:action="@{/admin}" th:method="post" id="frm" enctype="multipart/form-data"
+                      class="contact-form login-form bg-grey b-radius b-shadow" onsubmit="return checkDate();">
+                    <div class="input-label">
+                        <label for="musicalTitle">제목</label>
+                        <input type="text" name="musicalTitle" value="" id="musicalTitle" required>
+                    </div>
+                    <div class="input-label">
+                        <label for="startDate">시작날짜</label>
+                        <input type="date" name="startDate" id="startDate" required>
+                    </div>
+                    <div class="input-label">
+                        <label for="endDate">종료날짜</label>
+                        <input type="date" name="endDate" id="endDate" required>
+                    </div>
+                    <div class="half-input">
+                        <div class="input-label">
+                            <label for="startTime">공연 시작 시각</label>
+                            <input type="time" name="startTime" id="startTime" required>
+                        </div>
+                        <div class="input-label">
+                            <label for="endTime">공연 종료 시각</label>
+                            <input type="time" name="endTime" id="endTime" required>
+                        </div>
+                    </div>
+                    <div class="input-label">
+                        <label for="location">장소</label>
+                        <input type="text" name="location" value="" id="location" required>
+                    </div>
+                    <div class="input-label">
+                        <label>포스터 이미지</label>
+                        <input type="file" name="posterfile" accept="image/png, image/jpeg" required/>
+                    </div>
+                    <div class="input-label">
+                        <label>배너 이미지</label>
+                        <input type="file" name="bannerfile" accept="image/png, image/jpeg" required/>
+                    </div>
+                    <button type="submit" class="b-shadow submit" id="musical_register">등록하기</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function checkDate() {
+        let startDate = document.getElementById('startDate').value;
+        let endDate = document.getElementById('endDate').value;
+        let startTime = document.getElementById('startTime').value;
+        let endTime = document.getElementById('endTime').value;
+
+        if (startDate > endDate) {
+            alert("시작날짜보다 종료날짜가 빠릅니다.")
+            return false;
+        }
+
+        if (startTime > endTime) {
+            alert("시작시간보다 종료시간이 빠릅니다.")
+            return false;
+        }
+
+    }
+
+</script>
+</body>
+</html>

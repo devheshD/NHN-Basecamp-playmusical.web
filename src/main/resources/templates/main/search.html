@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no"/>
+    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <title>Play Musical</title>
+    <style>
+        header {
+            background-color: #FFA946;
+        }
+
+        .copyright {
+            background-color: #FFA946;
+        }
+
+        .libold {
+            font-weight: bold;
+        }
+
+        .domain {
+            padding-bottom: 0px;
+            padding-top: 0px;
+        }
+
+        .header-top {
+            padding-top: 100px;
+        }
+
+        .search-margin {
+            padding-top: 10px;
+        }
+
+        .font-13-color {
+            color: #FFA946;
+        }
+
+        .poster-img {
+            width: 130px;
+        }
+
+        .blog-nav {
+            padding-top: 0px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{/cmmn/header.html}"></div>
+<div class="main-section bg-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="alert-mess">
+                    <div class="alert-block bg-grey b-radius b-shadow">
+                        <p class="font-13">
+                            <b class="font-13-color">'[[${musicalSearchTitle}]]'</b>에 대한 검색 결과는 총
+                            <b class="font-13-color">[[${searchCount}]]</b>건 입니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8 h2">
+                <span class="bold">티캣 검색 결과</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8 h2">
+                <div class="table-responsive">
+                    <table class="tables b-shadow table">
+                        <tbody>
+                        <div th:each="dto : ${musicalTitleList.dtoList}" th:if="${searchCount != 0}">
+                            <tr>
+                                <td rowspan="3">
+                                    <a th:href="@{/detail(musicalNo = ${dto.musicalNo})}">
+                                        <img class="poster-img" th:src="@{|/display?fileName=${dto.posterImg}|}">
+                                    </a>
+                                </td>
+                                <td style="font-size: 16px; color: #3c3c3c; text-align: left; padding-left: 25px; width: 25px;">
+                                    뮤지컬 제목
+                                </td>
+                                <td class="title">
+                                    <a th:href="@{/detail(musicalNo = ${dto.musicalNo})}">
+                                        <b>[[${dto.musicalTitle}]]</b>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>장소</td>
+                                <td><b>[[${dto.location}]]</b></td>
+                            </tr>
+                            <tr>
+                                <td>날짜</td>
+                                <td><b>[[${dto.startDate}]] - [[${dto.endDate}]]</b></td>
+                            </tr>
+                        </div>
+                        <div th:if="${searchCount == 0}">
+                            검색결과가 없습니다.
+                        </div>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="blog-nav">
+                    <span class="page-item " th:if="${musicalTitleList.prev}">
+                        <a th:href="@{/guestbook/list(page =${musicalTitleList.start - 1})}" class="button-1 bg-orange">prev</a>
+                    </span>
+                    <span th:each="page: ${musicalTitleList.pageList}">
+                        <a th:class="'page-item ' + ${musicalTitleList.page == page?'act' : ''} "
+                           th:href="@{/search(title = ${musicalSearchTitle}, page = ${page})}">
+                            [[${page}]]
+                        </a>
+                    </span>
+                    <span th:if="${musicalTitleList.next}">
+                        <a th:href="@{/guestbook/list(page= ${musicalTitleList.end + 1})}" class="button-1 bg-orange">next</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{/cmmn/footer.html}"></div>
+<script>
+    $(".poster-img").mouseover(function () {
+        $(this).css("cursor", "pointer");
+    })
+    $(".title").mouseover(function () {
+        $(this).css("cursor", "pointer");
+    })
+</script>
+</body>
+</html>

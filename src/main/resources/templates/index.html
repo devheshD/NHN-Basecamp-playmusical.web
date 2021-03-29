@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
+          name="viewport">
+    <meta content="telephone=no" name="format-detection"/>
+    <link href="/favicon.ico" rel="shortcut icon"/>
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+          rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <title>Play Musical</title>
+    <style>
+      header {
+        background-color: #FFA946;
+      }
+
+      .copyright {
+        background-color: #FFA946;
+      }
+
+      .libold {
+        font-weight: bold;
+      }
+
+      .domain {
+        padding-bottom: 0px;
+        padding-top: 0px;
+      }
+
+      .header-top {
+        padding-top: 100px;
+      }
+
+      .search-margin {
+        padding-top: 10px;
+      }
+
+      .header-top {
+        padding-top: 100px;
+      }
+
+      .poster-img {
+        max-width: 170px;
+        height: 200px;
+      }
+
+      .swiper-container {
+        height: 250px;
+      }
+
+      .banner-img {
+        height: 250px;
+      }
+
+      .serv-block h6 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+    </style>
+</head>
+<body>
+<div th:replace="~{/cmmn/header.html}"></div>
+<div class="main-baner no-margin header-top">
+    <div class="swiper-container main-slider swiper-swiper-unique-id-0 initialized"
+         data-autoplay="5000" data-center="0"
+         data-loop="0" data-slides-per-view="1" data-speed="500" id="swiper-unique-id-0"
+         style="height: 500px; text-align: center">
+        <div class="swiper-wrapper"
+             style="width: 4413px; transform: translate3d(-2942px, 0px, 0px); transition-duration: 0s; height: 948px;">
+            <div class="swiper-slide" style="width: 1471px; height: 500px; text-align: center"
+                 th:each="dto : ${musicalListAll}">
+                <a th:href="@{/detail(musicalNo = ${dto.musicalNo})}">
+                    <img class="banner-img" style="height:100%; width:auto;"
+                         th:src="@{|/display?fileName=${dto.bannerImg}|}">
+                </a>
+            </div>
+        </div>
+        <div class="swiper-arrow-left">
+            <div class="arow">
+                <img alt="" src="img/arrow.png">
+            </div>
+        </div>
+        <div class="swiper-arrow-right">
+            <div class="arow">
+                <img alt="" src="img/arrow.png">
+            </div>
+        </div>
+        <div class="pagination hidden-pag pagination-swiper-unique-id-0"><span
+            class="swiper-pagination-switch"></span><span
+            class="swiper-pagination-switch"></span><span
+            class="swiper-pagination-switch swiper-visible-switch swiper-active-switch"></span>
+        </div>
+    </div>
+</div>
+
+
+<div class="main-section service bg-grey">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-12">
+                <div class="second-title">
+                    <h2>마감 임박 뮤지컬</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div th:each="dto : ${musicalListAll}">
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <a th:href="@{/detail(musicalNo = ${dto.musicalNo})}">
+                        <div class="serv-block border-yellow">
+                            <img alt="" class="poster-img"
+                                 th:src="@{|/display?fileName=${dto.posterImg}|}">
+                            <h6>[[${dto.musicalTitle}]]</h6>
+                            <p class="font-13">[[${dto.startDate}]] ~ [[${dto.endDate}]]</p>
+                            <p class="font-13">[[${dto.location}]]</p>
+                            <a class="button-1" th:href="@{/detail(musicalNo = ${dto.musicalNo})}">view
+                                more</a>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div th:replace="~{/cmmn/footer.html}"></div>
+</body>
+<script th:inline="javascript">
+    (function () {
+        let swiper = document.querySelector(".swiper-arrow-right");
+        swiper.click();
+    })()
+</script>
+</html>

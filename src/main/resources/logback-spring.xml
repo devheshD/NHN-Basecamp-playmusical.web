@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <encoder>
+            <pattern>%highlight(%date{yyyy-MM-dd HH:mm:ss} [%-5level]\(%class:%line\) %msg%n)
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="user-logger" class="ch.qos.logback.classic.AsyncAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <param name="includeCallerData" value="false"/>
+        <param name="queueSize" value="2048"/>
+        <param name="neverBlock" value="true"/>
+        <param name="maxFlushTime" value="60000"/>
+
+        <appender name="logNCrashHttp"
+          class="com.toast.java.logncrash.logback.LogNCrashHttpAppender">
+            <param name="collectorUrl" value="https://api-logncrash.cloud.toast.com"/>
+            <param name="appKey" value="OMCwzlOgsoiycIYp"/>
+            <springProfile name="dev">
+                <param name="appKey" value="OMCwzlOgsoiycIYp"/>
+            </springProfile>
+            <springProfile name="prod">
+                <param name="appKey" value="Oi9HjQCimKS2j8Jj"/>
+            </springProfile>
+            <param name="logSource" value="web"/>
+            <param name="debug" value="false"/>
+            <param name="logType" value="${spring.profiles.active}"/>
+        </appender>
+    </appender>
+
+    //bean 에러 발생했을 때 활성화 해주세요 (정상작동시 debug가 너무 길어서 주석처리)
+    <!--    <logger name="org.springframework.beans">-->
+    <!--        <appender-ref ref="user-logger"/>-->
+    <!--        <appender-ref ref="console"/>-->
+    <!--    </logger>-->
+
+    <logger name="com.playmusical.playmusicalweb">
+        <appender-ref ref="user-logger"/>
+        <appender-ref ref="console"/>
+    </logger>
+</configuration>

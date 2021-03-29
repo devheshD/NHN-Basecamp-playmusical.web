@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Play Musical</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
+    <script src="//code.jquery.com/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/latest/js/bootstrap.min.js"></script>
+    <script src="/js/ip.js" type="text/javascript"></script>
+    <style>
+        /* 사이드바 래퍼 스타일 */
+
+        #page-wrapper {
+            padding-left: 250px;
+        }
+
+        #sidebar-wrapper {
+            position: fixed;
+            width: 250px;
+            height: 100%;
+            margin-left: -250px;
+            background: #FFA946;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        #page-content-wrapper {
+            width: 100%;
+            padding: 20px;
+        }
+        /* 사이드바 스타일 */
+
+        .sidebar-nav {
+            width: 250px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            text-indent: 1.5em;
+            line-height: 2.8em;
+        }
+
+        .sidebar-nav li a {
+            display: block;
+            text-decoration: none;
+            color: #000000;
+        }
+
+        .sidebar-nav li a:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar-nav > .sidebar-brand {
+            font-size: 1.3em;
+            line-height: 3em;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="page-wrapper">
+        <!-- 사이드바 -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">관리자 페이지</a>
+                </li>
+                <li class = "bold"><a href="/admin">등록하기</a></li>
+            </ul>
+        </div>
+        <!-- /사이드바 -->
+    </div>
+</body>
+</html>

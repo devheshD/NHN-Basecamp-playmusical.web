@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
+          name="viewport">
+    <meta content="telephone=no" name="format-detection">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+          rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <title>Play Musical</title>
+
+    <style>
+      header {
+        background-color: #FFA946;
+      }
+
+      .copyright {
+        background-color: #FFA946;
+      }
+
+      .libold {
+        font-weight: bold;
+      }
+
+      .domain {
+        padding-bottom: 0px;
+        padding-top: 0px;
+      }
+
+      .header-top {
+        padding-top: 100px;
+      }
+
+      .search-margin {
+        padding-top: 10px;
+      }
+
+      thead tr {
+        background-color: #888888;
+        color: #ffffff;
+      }
+
+      thead tr th {
+        text-align: center;
+      }
+
+      .tables tr td {
+        color: #000000;
+      }
+
+      .tables tr td:first-child {
+        text-align: center;
+        font-size: 13px;
+      }
+
+
+      tr td a:link {
+        color: #888888;
+        text-decoration: underline;
+      }
+
+      button[type="submit"]:nth-child(n+2) {
+        padding: 5px 5px;
+
+      }
+
+      .cancel {
+        color: red !important;
+      }
+    </style>
+
+</head>
+<body>
+<div th:replace="~{/cmmn/header.html}"></div>
+<div class="main-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <img alt="" height="33px" src="/img/icon/boxbarIcon.png" width="20px">
+                <span class="bold h2" style="text-align: left">마이페이지</span>
+                <div class="row">
+                    <div class="col-lg-3"><span>&nbsp&nbsp&nbsp</span></div>
+                </div>
+                <div class="list-group">
+                    <a class="list-group-item" href="/user/mypage" style="color: #FFA946">예매내역
+                        확인·취소</a>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <span class="bold h3">예매내역 확인·취소</span>
+                <div class="row">
+                    <div class="col-lg-3"><span>&nbsp&nbsp&nbsp</span></div>
+                </div>
+
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="tables b-shadow table" id="tableList">
+                            <thead>
+                            <tr>
+                                <th>예매일</th>
+                                <th>예약번호</th>
+                                <th>상품명</th>
+                                <th>이용일</th>
+                                <th>취소가능일</th>
+                                <th>현재상태</th>
+                                <th>상세보기</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <div th:each="dto : ${musicalTitleList.dtoList}">
+                                <tr>
+                                    <td th:text="${#temporals.format(dto.reservationDate, 'yyyy년 MM월 dd일 HH시 mm분')}"></td>
+                                    <td>[[${dto.reservationNo}]]</td>
+                                    <td>[[${dto.musicalCalendar.musical.musicalTitle}]]</td>
+                                    <td th:text="${#temporals.format(dto.musicalCalendar.performanceDate, 'yyyy년 MM월 dd일 HH시 mm분')}"></td>
+                                    <td th:text="${#temporals.format(dto.musicalCalendar.cancelDate, 'yyyy년 MM월 dd일 HH시 mm분')}"></td>
+                                    <td th:if="${dto.reservationState}==1"><b>예매</b></td>
+                                    <td class="cancel" th:if="${dto.reservationState}==0"><b>취소</b>
+                                    </td>
+                                    <td>
+                                        <form action="/user/mypage/detail" method='post'>
+                                            <input name='performanceNo'
+                                                   th:value="${dto.musicalCalendar.performanceNo}"
+                                                   type='hidden'>
+                                            <input name='reservationNo'
+                                                   th:value="${dto.reservationNo}"
+                                                   type='hidden'>
+                                            <button class="detail-button-custom"
+                                                    th:id="${dto.reservationNo}"
+                                                    type='submit'>상세
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </div>
+                            <tr rowspan="7" style="text-align: center"
+                                th:if="${musicalTitleList.totalPage == 0}">
+                                <td colspan=100%>
+                                    <div>
+                                        <h3><b>검색결과가 없습니다.</b></h3>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <div class="blog-nav">
+                        <span th:each="page: ${musicalTitleList.pageList}">
+                        <a th:class="'page-item ' + ${musicalTitleList.page == page?'act' : ''} "
+                           th:href="@{/user/mypage( page = ${page})}">
+                            [[${page}]]
+                        </a>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{/cmmn/footer.html}"></div>
+</body>
+</html>
